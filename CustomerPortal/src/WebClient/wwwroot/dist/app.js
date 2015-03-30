@@ -43,9 +43,12 @@ app.controller("AdCategoryRulesController", ["$scope", "$http", "_", "CurrentUse
     $scope.adCategoryConfiguration = {};
     $scope.exceptionCategories = [];
 
-    $scope.remove = function(index) {
-        $scope.adCategoryConfiguration.ExceptionCategoryIds.splice(index, 1);
-        $scope.exceptionCategories = _.filter($scope.categories, function(category) { return _.find($scope.adCategoryConfiguration.ExceptionCategoryIds, function(id) { return id === category.Id; }) });
+    $scope.$watchCollection("adCategoryConfiguration.ExceptionCategoryIds", function (newValue, oldValue) {
+        $scope.exceptionCategories = _.filter($scope.categories, function (category) { return _.find(newValue, function (id) { return id === category.Id; }) });
+    });
+
+    $scope.remove = function (category) {
+        $scope.adCategoryConfiguration.ExceptionCategoryIds = _.without($scope.adCategoryConfiguration.ExceptionCategoryIds, category.Id);
     };
 
     $scope.add = function (category) {
@@ -53,7 +56,6 @@ app.controller("AdCategoryRulesController", ["$scope", "$http", "_", "CurrentUse
         if (_.contains($scope.exceptionCategories, category)) return;
 
         $scope.adCategoryConfiguration.ExceptionCategoryIds.push(category.Id);
-        $scope.exceptionCategories.push(category);
     };
 
     $scope.getAvailableCategories = function() {
@@ -68,9 +70,6 @@ app.controller("AdCategoryRulesController", ["$scope", "$http", "_", "CurrentUse
             $scope.categories = result.data;
             $scope.adCategoryConfiguration = currentUser.Customer.AdCategoryConfiguration;
 
-            var exceptionCategoryIds = $scope.adCategoryConfiguration.ExceptionCategoryIds;
-            $scope.exceptionCategories = _.filter($scope.categories, function(category) { return _.find(exceptionCategoryIds, function(id) { return id === category.Id; }) });
-            
         });
 
     });
