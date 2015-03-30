@@ -1,0 +1,29 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Ad Category Rules
+        </h1>
+    </div>
+</div>
+
+<div ng-app="customerPortal" ng-cloak>
+    <div ng-controller="AdCategoryRulesController">
+
+        <p>
+            <h4>Include All Categories By Default</h4>
+            Yes: <input type="radio" ng-model="adCategoryConfiguration.ExcludeAllByDefault" ng-value="false" />
+            No: <input type="radio" ng-model="adCategoryConfiguration.ExcludeAllByDefault" ng-value="true" />
+        </p>
+
+        <h4>Exceptions</h4>
+        <ul>
+            <li ng-repeat="category in exceptionCategories">{{category.Name}} <button ng-click="remove($index)">Remove</button></li>
+        </ul>
+
+        <h4>Categories</h4>
+        <ul>
+            <li ng-repeat="category in getAvailableCategories()"><button ng-click="add(category)">Add</button>{{category.Name}}</li>
+        </ul>
+
+    </div>
+</div>
